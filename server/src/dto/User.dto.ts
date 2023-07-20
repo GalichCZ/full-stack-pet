@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { TUserDTO } from "../Types";
 
 class UserDTO implements TUserDTO {
-  public id: Types.ObjectId;
+  public _id: Types.ObjectId;
   public email: string;
   public nickname: string;
   public birthday: Date;
@@ -11,7 +11,7 @@ class UserDTO implements TUserDTO {
   public role: string;
   public avatar: string | undefined;
   constructor(
-    id: Types.ObjectId,
+    _id: Types.ObjectId,
     email: string,
     nickname: string,
     birthday: Date,
@@ -20,7 +20,7 @@ class UserDTO implements TUserDTO {
     role: string,
     avatar: string | undefined
   ) {
-    this.id = id;
+    this._id = _id;
     this.email = email;
     this.nickname = nickname;
     this.birthday = birthday;
