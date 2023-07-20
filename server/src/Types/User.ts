@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export interface IUser {
-  id: Types.ObjectId;
+  _id: Types.ObjectId;
   email: string;
   nickname: string;
   password: string;
@@ -13,3 +13,7 @@ export interface IUser {
 }
 
 export type TUserDTO = Omit<IUser, "password">;
+export type TUserRegistration = Pick<
+  IUser,
+  "email" | "birthday" | "nickname" | "password" | "avatar"
+>;

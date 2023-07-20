@@ -1,6 +1,6 @@
 import UserDTO from "../dto/User.dto";
 import UserSchema from "../models/User.model";
-import { TUserDTO } from "../Types";
+import { IUser, TUserDTO, TUserRegistration } from "../Types";
 
 export const getAllUsers = async () => {
   try {
@@ -41,9 +41,9 @@ export const getAllUsers = async () => {
   }
 };
 
-export const getOneUser = async (_id: string) => {
+export const getOneUser = async <T>(specifics: T) => {
   try {
-    const user = await UserSchema.findById(_id).exec();
+    const user: IUser | null = await UserSchema.findOne({ specifics }).exec();
 
     if (!user) {
       return { message: "Cannot find user" };
@@ -61,6 +61,26 @@ export const getOneUser = async (_id: string) => {
     );
 
     return userDto;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const createUser = async (userData: TUserRegistration) => {
+  try {
+    const newUser = await UserSchema.create({ ...userData });
+
+    return new UserDTO(
+      newUser._id,
+      newUser.email,
+      newUser.nickname,
+      newUser.birthday,
+      newUser.banned,
+      newUser.activated,
+      newUser.role,
+      newUser.avatar
+    );
   } catch (error) {
     console.log(error);
     return error;
