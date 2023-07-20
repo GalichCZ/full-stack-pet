@@ -18,7 +18,7 @@ const userSchema = new Schema<IUser>(
       required: true,
     },
     birthday: {
-      type: String,
+      type: Date,
       required: true,
     },
     avatar: String,
