@@ -1,5 +1,6 @@
 import UserDTO from "../dto/User.dto";
 import UserSchema from "../models/User.model";
+import bcrypt from "bcrypt";
 import { IUser, TUserDTO, TUserRegistration } from "../Types";
 
 export const getAllUsers = async () => {
@@ -41,12 +42,13 @@ export const getAllUsers = async () => {
   }
 };
 
-export const getOneUser = async <T>(specifics: T) => {
+export const getOneUser = async <T extends object>(specifics: T) => {
   try {
-    const user: IUser | null = await UserSchema.findOne({ specifics }).exec();
+    const query = { ...specifics };
+    const user: IUser | null = await UserSchema.findOne(query).exec();
 
     if (!user) {
-      return { message: "Cannot find user" };
+      return null;
     }
 
     const userDto: TUserDTO = new UserDTO(
@@ -63,7 +65,6 @@ export const getOneUser = async <T>(specifics: T) => {
     return userDto;
   } catch (error) {
     console.log(error);
-    return error;
   }
 };
 
@@ -83,6 +84,17 @@ export const createUser = async (userData: TUserRegistration) => {
     );
   } catch (error) {
     console.log(error);
-    return error;
   }
+};
+
+export const passwordCompare = async (nickname: string, password: string) => {
+  const user: IUser | null = await UserSchema.findOne({ nickname }).exec();
+
+  if (!user) {
+    return false;
+  }
+
+  const isPassEqual = await bcrypt.compare(password, user.password);
+
+  return isPassEqual;
 };
